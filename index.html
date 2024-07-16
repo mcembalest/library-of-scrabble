@@ -52,52 +52,64 @@
     <script>
         const addGameForm = document.getElementById('addGameForm');
         const gameList = document.getElementById('gameList');
-        const correctPasscode = 'your-secret-passcode'; // Change this to your desired passcode
 
-        addGameForm.addEventListener('submit', function(e) {
+        addGameForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const passcode = document.getElementById('passcode').value;
-            if (passcode !== correctPasscode) {
-                alert('Incorrect passcode');
-                return;
-            }
-
             const gameName = document.getElementById('gameName').value;
             const gameDescription = document.getElementById('gameDescription').value;
             const gameFile = document.getElementById('gameFile').files[0];
 
-            // For simplicity, we're not actually uploading the file in this example
-            const game = { name: gameName, description: gameDescription, file: gameFile ? gameFile.name : 'No file uploaded' };
+            const formData = new FormData();
+            formData.append('passcode', passcode);
+            formData.append('name', gameName);
+            formData.append('description', gameDescription);
+            formData.append('file', gameFile ? gameFile.name : 'No file uploaded');
 
-            // Store the game in local storage
-            let games = JSON.parse(localStorage.getItem('games')) || [];
-            games.push(game);
-            localStorage.setItem('games', JSON.stringify(games));
+            try {
+                const response = await fetch('/api/addGame', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            // Clear the form
-            addGameForm.reset();
+                if (!response.ok) {
+                    throw new Error('Failed to add game');
+                }
 
-            // Update the displayed list
-            displayGames();
+                addGameForm.reset();
+                displayGames();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to add game. Please try again.');
+            }
         });
 
-        function displayGames() {
-            const games = JSON.parse(localStorage.getItem('games')) || [];
+        async function displayGames() {
+          try {
+            const response = await fetch('/api/getGames');
+            if (!response.ok) {
+              throw new Error('Failed to fetch games');
+            }
+            const games = await response.json();
+            
             gameList.innerHTML = '<h2>Added Games:</h2>';
-            games.forEach((game, index) => {
-                gameList.innerHTML += `
-                    <div>
-                        <h3>${game.name}</h3>
-                        <p>${game.description}</p>
-                        <p>File: ${game.file}</p>
-                    </div>
-                `;
+            games.forEach(game => {
+              gameList.innerHTML += `
+                <div>
+                  <h3>${game.name}</h3>
+                  <p>${game.description}</p>
+                  <p>File: ${game.file}</p>
+                </div>
+              `;
             });
+          } catch (error) {
+            console.error('Error:', error);
+            gameList.innerHTML = '<p>Failed to load games. Please try again later.</p>';
+          }
         }
 
         // Display games on page load
         displayGames();
-
     </script>
 </body>
 </html>

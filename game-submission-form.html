@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #gameList {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Game</h1>
+    <form id="addGameForm">
+        <input type="password" id="passcode" placeholder="Passcode" required>
+        <input type="text" id="gameName" placeholder="Game Name" required>
+        <textarea id="gameDescription" placeholder="Game Description" required></textarea>
+        <input type="file" id="gameFile" accept=".pdf,.jpg,.png,.gif">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="gameList"></div>
+
+    <script>
+        // JavaScript will be added here
+    </script>
+</body>
+</html>
